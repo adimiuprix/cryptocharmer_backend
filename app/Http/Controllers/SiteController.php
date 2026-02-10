@@ -48,10 +48,8 @@ class SiteController extends Controller
 
         if ($request->hasFile('logo')) {
             $file = $request->file('logo');
-            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $filename = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('logos'), $filename);
-            $path = 'logos/' . $filename;
-
             if (! $path) {
                 return back()->withErrors(['logo' => 'Gagal menyimpan file logo.'])->withInput();
             }
@@ -101,9 +99,8 @@ class SiteController extends Controller
 
         if ($request->hasFile('logo')) {
             $file = $request->file('logo');
-            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $filename = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('logos'), $filename);
-            $path = 'logos/' . $filename;
             if (! $path) {
                 return back()->withErrors(['logo' => 'Gagal menyimpan file logo.'])->withInput();
             }

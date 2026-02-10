@@ -31,7 +31,7 @@
                         <label class="form-label">Logo</label>
                         @if ($content->logo)
                             <div class="mb-2">
-                                <img src="{{ asset('storage/' . $content->logo) }}" alt="logo"
+                                <img src="{{ asset('logos/' . $content->logo) }}" alt="logo"
                                     style="max-height:80px;">
                             </div>
                         @endif
