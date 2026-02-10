@@ -16,7 +16,7 @@ class ContentController extends Controller
                 return [
                     'id'         => $content->id,
                     'name'       => $content->name,
-                    'logo'       => $content->logo,
+                    'logo'       => url('logos/' . $content->logo),
                     'headline'   => $content->headline,
                     'category'   => $content->category?->name,
                     'badges'     => $content->badges,
