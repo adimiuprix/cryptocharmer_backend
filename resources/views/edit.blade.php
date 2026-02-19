@@ -125,24 +125,16 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Currencies</label>
-                        <div id="currencies-list">
-                            @php
-                                $currencies = old('currencies', $content->currencies ?? ['']);
-                                if (!is_array($currencies)) {
-                                    $currencies = [$currencies];
-                                }
-                                $currencies = array_map(function ($v) {
-                                    return is_scalar($v) ? $v : json_encode($v);
-                                }, $currencies);
-                            @endphp
-                            @foreach ($currencies as $c)
-                                <div class="mb-2"><input type="text" name="currencies[]" class="form-control mb-2"
-                                        value="{{ $c }}" placeholder="Currency"></div>
-                            @endforeach
-                        </div>
-                        <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="add-currency">Tambah
-                            Currency</button>
+                        <label class="form-label d-block">Currencies</label>
+                        @foreach ($currencies as $currency)
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" name="currencies[]" type="checkbox"
+                                    value="{{ $currency->id }}" id="curr-{{ $currency->id }}"
+                                    {{ (is_array(old('currencies')) && in_array($currency->id, old('currencies'))) || (is_null(old('currencies')) && $content->currencies->contains($currency->id)) ? 'checked' : '' }}>
+                                <label class="form-check-label"
+                                    for="curr-{{ $currency->id }}">{{ $currency->name }}</label>
+                            </div>
+                        @endforeach
                     </div>
 
                     <div class="mt-4">
@@ -170,12 +162,6 @@
             document.getElementById('features-list').appendChild(div);
         });
 
-        document.getElementById('add-currency').addEventListener('click', function() {
-            const div = document.createElement('div');
-            div.innerHTML =
-                '<div class="input-group mb-2"><input type="text" name="currencies[]" class="form-control" placeholder="Currency"><button type="button" class="btn btn-outline-danger btn-remove">Hapus</button></div>';
-            document.getElementById('currencies-list').appendChild(div);
-        });
 
         document.addEventListener('click', function(e) {
             if (e.target && e.target.classList.contains('btn-remove')) {

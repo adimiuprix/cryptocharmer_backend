@@ -86,14 +86,19 @@
                             Feature</button>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Currencies</label>
-                        <div id="currencies-list">
-                            <input type="text" name="currencies[]" class="form-control mb-2"
-                                placeholder="Currency 1">
+                    <div class="mb-3 row">
+                        <label class="col-sm-3 text-sm-end col-form-label pt-0">Currencies</label>
+                        <div class="col-sm-9">
+                            @foreach ($currencies as $currency)
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" name="currencies[]" type="checkbox"
+                                        value="{{ $currency->id }}" id="curr-{{ $currency->id }}"
+                                        {{ is_array(old('currencies')) && in_array($currency->id, old('currencies')) ? 'checked' : '' }}>
+                                    <label class="form-check-label"
+                                        for="curr-{{ $currency->id }}">{{ $currency->name }}</label>
+                                </div>
+                            @endforeach
                         </div>
-                        <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="add-currency">Tambah
-                            Currency</button>
                     </div>
 
                     <div class="mt-4">

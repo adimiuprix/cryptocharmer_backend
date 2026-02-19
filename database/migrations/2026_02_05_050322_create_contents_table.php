@@ -20,7 +20,6 @@ return new class extends Migration
             $table->json('badges')->nullable();
             $table->string('highlight')->nullable();
             $table->json('features')->nullable();
-            $table->json('currencies')->nullable();
             $table->foreignId('wallet_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('link')->nullable();
             $table->timestamps();

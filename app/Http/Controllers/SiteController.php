@@ -6,6 +6,7 @@ use App\Models\Content;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Wallet;
+use App\Models\Currency;
 use Illuminate\Support\Facades\Storage;
 
 class SiteController extends Controller
@@ -25,7 +26,8 @@ class SiteController extends Controller
     {
         $categories = Category::all();
         $wallets = Wallet::all();
-        return view('create', compact('categories', 'wallets'));
+        $currencies = Currency::all();
+        return view('create', compact('categories', 'wallets', 'currencies'));
     }
 
     public function store(Request $request)
@@ -40,8 +42,8 @@ class SiteController extends Controller
             'highlight' => 'nullable|string',
             'features' => 'nullable|array|min:1',
             'features.*' => 'string',
-            'currencies' => 'nullable|array|min:1',
-            'currencies.*' => 'string',
+            'currencies' => 'nullable|array',
+            'currencies.*' => 'exists:currencies,id',
             'wallet_id' => 'nullable|exists:wallets,id',
             'link' => 'nullable|url',
         ]);
@@ -64,7 +66,11 @@ class SiteController extends Controller
             }
         }
 
-        Content::create($validated);
+        $currencies = $validated['currencies'] ?? [];
+        unset($validated['currencies']);
+
+        $content = Content::create($validated);
+        $content->currencies()->sync($currencies);
 
         return redirect()->route('admin.content')->with('success', 'Content created successfully.');
     }
@@ -74,7 +80,8 @@ class SiteController extends Controller
         $content = Content::findOrFail($id);
         $categories = Category::all();
         $wallets = Wallet::all();
-        return view('edit', compact('content', 'categories', 'wallets'));
+        $currencies = Currency::all();
+        return view('edit', compact('content', 'categories', 'wallets', 'currencies'));
     }
 
     public function update(Request $request, $id)
@@ -92,7 +99,7 @@ class SiteController extends Controller
             'features' => 'nullable|array',
             'features.*' => 'string',
             'currencies' => 'nullable|array',
-            'currencies.*' => 'string',
+            'currencies.*' => 'exists:currencies,id',
             'wallet_id' => 'nullable|exists:wallets,id',
             'link' => 'nullable|url',
         ]);
@@ -117,8 +124,24 @@ class SiteController extends Controller
             }
         }
 
+        $currencies = $validated['currencies'] ?? [];
+        unset($validated['currencies']);
+
         $content->update($validated);
+        $content->currencies()->sync($currencies);
 
         return redirect()->route('admin.content')->with('success', 'Content updated successfully.');
+    }
+
+    public function delete($id)
+    {
+        $content = Content::findOrFail($id);
+        if ($content->logo) {
+            Storage::disk('public')->delete($content->logo);
+        }
+        $content->currencies()->detach();
+        $content->delete();
+
+        return redirect()->route('admin.content')->with('success', 'Content deleted successfully.');
     }
 }

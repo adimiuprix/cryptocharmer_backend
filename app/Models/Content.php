@@ -14,7 +14,6 @@ class Content extends Model
         'badges',
         'highlight',
         'features',
-        'currencies',
         'wallet_id',
         'link',
     ];
@@ -22,7 +21,7 @@ class Content extends Model
     protected $casts = [
         'badges' => 'array',
         'features' => 'array',
-        'currencies' => 'array',
+        'features' => 'array',
     ];
 
     public function category()
@@ -33,5 +32,10 @@ class Content extends Model
     public function wallet()
     {
         return $this->belongsTo(Wallet::class);
+    }
+
+    public function currencies()
+    {
+        return $this->belongsToMany(Currency::class, 'content_currency');
     }
 }
