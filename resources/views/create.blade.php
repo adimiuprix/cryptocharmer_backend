@@ -64,8 +64,12 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Highlight (tulisan hijau)</label>
-                        <input type="text" name="highlight" class="form-control" value="{{ old('highlight') }}">
+                        <label class="form-label">Status Proyek</label>
+                        <select name="highlight" class="form-select">
+                            <option value="">-- Pilih Status --</option>
+                            <option value="Paying" {{ old('highlight') == 'Paying' ? 'selected' : '' }}>Paying</option>
+                            <option value="Scam" {{ old('highlight') == 'Scam' ? 'selected' : '' }}>Scam</option>
+                        </select>
                     </div>
 
                     <div class="mb-3">

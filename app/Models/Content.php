@@ -21,7 +21,6 @@ class Content extends Model
     protected $casts = [
         'badges' => 'array',
         'features' => 'array',
-        'features' => 'array',
     ];
 
     public function category()
